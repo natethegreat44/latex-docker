@@ -1,4 +1,5 @@
-FROM ubuntu:xenial
+ARG BASE_TAG=focal
+FROM ubuntu:${BASE_TAG}
 MAINTAINER Benedikt Lang <mail@blang.io>
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -15,7 +16,9 @@ RUN wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz; \
     rm -r /install-tl-unx; \
 	rm install-tl-unx.tar.gz
 
-ENV PATH="/usr/local/texlive/2017/bin/x86_64-linux:${PATH}"
+RUN cd /usr/local/texlive/ \
+    && ln -s $(find . -type d -regextype posix-egrep -regex '^./2[0-9]{3}$') current
+ENV PATH="/usr/local/texlive/current/bin/x86_64-linux:${PATH}"
 
 ENV HOME /data
 WORKDIR /data
