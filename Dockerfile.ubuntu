@@ -1,11 +1,11 @@
-ARG BASE_TAG=focal
+ARG BASE_TAG=impish
 FROM ubuntu:${BASE_TAG}
 MAINTAINER Benedikt Lang <mail@blang.io>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -q && apt-get install -qy \
     texlive-full \
-    python-pygments gnuplot \
+    python3-pygments gnuplot \
     make git \
     && rm -rf /var/lib/apt/lists/*
 

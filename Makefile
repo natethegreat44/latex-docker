@@ -15,6 +15,9 @@ build_ubuntu_xenial: Dockerfile.ubuntu
 build_ubuntu_focal: Dockerfile.ubuntu
 	@docker build --pull -f Dockerfile.ubuntu --build-arg BASE_TAG=focal -t $(IMAGE):ubuntu-focal .
 
+build_ubuntu_impish: Dockerfile.ubuntu
+	@docker build --pull -f Dockerfile.ubuntu --build-arg BASE_TAG=impish -t $(IMAGE):ubuntu-impish .
+
 build_basic: Dockerfile.basic
 	@docker build --pull -f Dockerfile.basic -t $(IMAGE):ctanbasic .
 
