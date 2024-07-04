@@ -1,3 +1,5 @@
+DOCKER_CMD = $(if $(shell command -v docker 2>/dev/null), docker, podman)
+
 NS = blang
 REPO = latex
 IMAGE = $(NS)/$(REPO)
@@ -7,21 +9,24 @@ IMAGE = $(NS)/$(REPO)
 build: build_ubuntu build_basic build_full
 
 build_ubuntu: build_ubuntu_xenial build_ubuntu_focal
-	@docker tag $(IMAGE):ubuntu-focal $(IMAGE):ubuntu
+	@$(DOCKER_CMD) tag $(IMAGE):ubuntu-focal $(IMAGE):ubuntu
+
+build_ubuntu_noble: Dockerfile.ubuntu
+	@$(DOCKER_CMD) build --pull -f Dockerfile.ubuntu --build-arg BASE_TAG=noble -t $(IMAGE):ubuntu-noble .
 
 build_ubuntu_xenial: Dockerfile.ubuntu
-	@docker build --pull -f Dockerfile.ubuntu --build-arg BASE_TAG=xenial -t $(IMAGE):ubuntu-xenial .
+	@$(DOCKER_CMD) build --pull -f Dockerfile.ubuntu --build-arg BASE_TAG=xenial -t $(IMAGE):ubuntu-xenial .
 	
 build_ubuntu_focal: Dockerfile.ubuntu
-	@docker build --pull -f Dockerfile.ubuntu --build-arg BASE_TAG=focal -t $(IMAGE):ubuntu-focal .
+	@$(DOCKER_CMD) build --pull -f Dockerfile.ubuntu --build-arg BASE_TAG=focal -t $(IMAGE):ubuntu-focal .
 
 build_ubuntu_impish: Dockerfile.ubuntu
-	@docker build --pull -f Dockerfile.ubuntu --build-arg BASE_TAG=impish -t $(IMAGE):ubuntu-impish .
+	@$(DOCKER_CMD) build --pull -f Dockerfile.ubuntu --build-arg BASE_TAG=impish -t $(IMAGE):ubuntu-impish .
 
 build_basic: Dockerfile.basic
-	@docker build --pull -f Dockerfile.basic -t $(IMAGE):ctanbasic .
+	@$(DOCKER_CMD) build --pull -f Dockerfile.basic -t $(IMAGE):ctanbasic .
 
 build_full: build_basic Dockerfile.full
-	@docker build -f Dockerfile.full --build-arg BASE_IMAGE=$(IMAGE):ctanbasic  -t $(IMAGE):ctanfull .
+	@$(DOCKER_CMD) build -f Dockerfile.full --build-arg BASE_IMAGE=$(IMAGE):ctanbasic  -t $(IMAGE):ctanfull .
 
 default: build
